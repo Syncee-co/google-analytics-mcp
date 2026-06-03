@@ -2,26 +2,21 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# A Python pufferelés kikapcsolása, hogy az MCP stdio kommunikáció azonnali legyen
+# Python pufferelés kikapcsolása a stabil MCP kommunikációért
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-# Rendszerfüggőségek telepítése (ha a csomagok fordításához szükséges lenne, pl. gcc)
+# Alapvető fordítóeszközök telepítése (opcionális, de biztonsági játék, ha valamelyik függőségnek kell)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Függőségek másolása és telepítése
-# (A projekt felépítésétől függően ez lehet requirements.txt vagy pyproject.toml)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# A teljes forráskód bemásolása
+# Első lépésként a TELJES forráskódot másoljuk be, mert a pyproject.toml-nek szüksége van rá
 COPY . .
 
-# Ha a csomagot helyileg is telepíteni kell (pl. szerkeszthető módban)
-# RUN pip install -e .
+# A projekt és az összes függőség telepítése a pyproject.toml alapján
+RUN pip install --no-cache-dir .
 
-# Az MCP szerver indítása standard input/output módban
-# (Ha a modul neve eltér, pl. src.main, írd át arra!)
-ENTRYPOINT ["python", "-m", "google_analytics_mcp"]
+# Belépési pont: a modern MCP projektek a pyproject.toml-ben definiálnak egy parancsot (console_script).
+# Ez a repóban nagy valószínűséggel a "google-analytics-mcp" parancs lesz.
+ENTRYPOINT ["google-analytics-mcp"]
