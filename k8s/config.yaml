@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: syncee-ga-mc-config
+  name: syncee-ga-mcp-config
   namespace: default
 data:
   GOOGLE_PROJECT_ID: "syncee-cloud"
