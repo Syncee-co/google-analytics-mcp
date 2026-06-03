@@ -1,0 +1,12 @@
+apiVersion: networking.gke.io/v1
+kind: GCPBackendPolicy
+metadata:
+  name: cloud-armor-policy
+  namespace: default
+spec:
+  default:
+    securityPolicy: mcp-policy
+  targetRef:
+    group: ""
+    kind: Service
+    name: mcp-ga-service

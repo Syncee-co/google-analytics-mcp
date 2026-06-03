@@ -18,7 +18,7 @@ spec:
       serviceAccountName: default-ga
       containers:
         - name: mcp-ga-container
-          image: europe-west4-docker.pkg.dev/syncee-cloud/syncee-docker/syncee-mcp-master:latest
+          image: europe-west4-docker.pkg.dev/syncee-cloud/syncee-docker/syncee-mcp-ga-master:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
