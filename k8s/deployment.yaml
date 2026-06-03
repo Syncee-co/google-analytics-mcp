@@ -15,16 +15,18 @@ spec:
       labels:
         app: mcp-ga
     spec:
-      serviceAccountName: default-sa
+      serviceAccountName: default-ga
       containers:
-        - name: mcp-container
+        - name: mcp-ga-container
           image: europe-west4-docker.pkg.dev/syncee-cloud/syncee-docker/syncee-mcp-master:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: syncee-general-config
+            - configMapRef:
+                name: syncee-mcp-ga-config
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           lifecycle:
             preStop:
               exec:
