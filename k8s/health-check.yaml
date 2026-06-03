@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1
 kind: HealthCheckPolicy
 metadata:
-  name: mcp-health-check-policy
+  name: mcp-ga-health-check-policy
   namespace: default
 spec:
   default:
