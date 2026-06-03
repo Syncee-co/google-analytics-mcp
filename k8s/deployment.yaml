@@ -22,9 +22,13 @@ spec:
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
-                name: syncee-general-config
+                name: syncee-ga-mcp-config
             - configMapRef:
-                name: syncee-mcp-ga-config
+                name: syncee-general-config
+          volumeMounts:
+            - name: secret
+              mountPath: "/run/secret"
+              readOnly: true
           ports:
             - containerPort: 80
           lifecycle:
@@ -44,3 +48,7 @@ spec:
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10
+      volumes:
+        - name: secret
+          secret:
+            secretName: syncee-ga-mcp-secret
