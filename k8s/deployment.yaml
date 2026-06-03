@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-deployment
+  namespace: default
+  labels:
+    app: mcp-ga
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-ga
+  template:
+    metadata:
+      labels:
+        app: mcp-ga
+    spec:
+      serviceAccountName: default-sa
+      containers:
+        - name: mcp-container
+          image: europe-west4-docker.pkg.dev/syncee-cloud/syncee-docker/syncee-mcp-master:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: syncee-general-config
+          ports:
+            - containerPort: 8080
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "/bin/sh", "-c", "sleep 300" ]
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1024Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10

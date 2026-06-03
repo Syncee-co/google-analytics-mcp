@@ -1,0 +1,24 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: docker-build
+    args:
+      - "build"
+      - "--tag"
+      - "europe-west4-docker.pkg.dev/$PROJECT_ID/syncee-docker/syncee-mcp-ga-$BRANCH_NAME:$SHORT_SHA"
+      - "--tag"
+      - "europe-west4-docker.pkg.dev/$PROJECT_ID/syncee-docker/syncee-mcp-ga-$BRANCH_NAME:latest"
+      - "."
+  - name: gcr.io/cloud-builders/docker
+    waitFor: ['docker-build']
+    id: docker-push
+    args: ["push", "europe-west4-docker.pkg.dev/$PROJECT_ID/syncee-docker/syncee-mcp-ga-$BRANCH_NAME", "-a"]
+
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - 'run'
+      - '--filename=k8s/'
+      - '--image=europe-west4-docker.pkg.dev/$PROJECT_ID/syncee-docker/syncee-mcp-ga-$BRANCH_NAME:$SHORT_SHA'
+      - '--location=europe-west4'
+      - '--cluster=syncee-gke-cluster'
+
+timeout: "1200s"
