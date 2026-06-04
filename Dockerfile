@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Első lépésként a TELJES forráskódot másoljuk be, mert a pyproject.toml-nek szüksége van rá
 COPY . .
-COPY setting.json ~/.gemini/settings.json
+COPY ./settings.json ~/.gemini/settings.json
 RUN rm -rf k8s cloudbuild
 # A projekt és az összes függőség telepítése a pyproject.toml alapján
 RUN pip install --no-cache-dir .
